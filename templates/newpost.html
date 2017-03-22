@@ -1,0 +1,62 @@
+{% extends "base_login.html" %}
+
+{% block content %}
+
+<div class="edit-blog">
+	<form class="posts" method="post">
+		<div>
+				<h2 class="subject-title" >Subject of the Blog</h2>
+				<div class="subject-body">
+					<input  class="subject-content" type="text" name="subject" value="{{ subject}}">
+				</div>
+		</div>
+		<div >
+				<h2 class="subject-title" >Content of the blog</h2>
+				<div class="subject-body">
+					<textarea class="content" name="content">{{ content }}</textarea>
+				</div>
+		</div>
+		<div class="error" ">{{ error}}</div>
+		{% if content %}
+
+		<div class="subject-body">
+			<input  type="submit" value="Edit">
+		</div>
+		{% else %}
+		<div class="subject-body">
+			<input type="submit">
+		</div>
+		
+		{% endif %}
+
+	{% if content %}
+	</form>
+	<div class="res-del">
+		<div class="reset">
+			<form method="post">
+				<input type="hidden" name="reset" value="1">
+				<div >
+					<input  type="submit" value="Reset">
+				</div>
+			</form>
+		</div>
+		<div class="delete">
+			<form method="post">
+				<input type="hidden" name="delete" value="1">
+				<div  >
+					<input type="submit" value="Delete">
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	
+	{% endif %}
+
+</div>
+	
+		
+
+
+
+{% endblock %}

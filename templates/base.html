@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/static/blog.css" >
+	<link rel="stylesheet" media="screen and (max-width:500px)" href="/static/responsive.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	<title> Multi User Blog</title>
+</head>
+
+<body>
+<header>
+	<div class="heading">
+		<h1 class="heading-title"><a href="/">Blogging is awesome!!!</a> </h1>
+		<div class="user-login">
+			<div class="button-box">
+			<form method="post">
+				<div>
+					<input class="front-login" type="text" name="username">
+				</div>
+				<div>
+					<input class="front-login" type="password" name="password">
+				</div>
+				<div class="error">{{ error }}</div>
+				<div><input type="submit" value="Login"></div>
+				
+			</form> 
+			</div>
+			<div class="button-box">
+				<a href="/signup">
+					Signup
+				</a>
+			</div>
+		</div>
+
+	</div>
+
+</header>
+
+	
+	{% block content %}
+	{% endblock %}
+</body>
+</html>

@@ -1,0 +1,80 @@
+body {
+	font-size: 20px;
+}
+
+.heading-title {
+	width: 100%;
+}
+
+.user {
+	width: 100%;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.links {
+	width: 100%;
+}
+
+.user-login {
+	width: 100%;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-main {
+	width: 100%;
+}
+
+.post-details {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: 10px;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.details-author {
+	max-width: 150px; 
+	margin-top: 0;
+}
+
+.like-dislike {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100px;
+	margin-left: 10px;
+}
+
+.like-form {
+	width: 50px;
+}
+
+.details-edit {
+	width: 100px;
+	margin-top: 0;
+	margin-left: 10px;
+}
+.post-comments {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.post-pre-comments {
+	width: 100%;
+}
+
+.edit-blog {
+	width: 100%;
+}
+
+.subject-body {
+	width: 100%;
+	margin: 0 0;
+}
+
+.no-posts {
+	width: 100%;
+}
