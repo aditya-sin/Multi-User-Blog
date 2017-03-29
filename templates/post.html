@@ -24,7 +24,7 @@
   <div class="post-details">
     <div class="details-author">
       <i class="fa fa-pencil"></i>
-      &nbsp By: &nbsp{{p.blog_author}}
+      &nbsp By: &nbsp{{p.blog_author.name}}
     </div>
     {% if display == 1 and not c %}
     <div class="like-dislike">
@@ -52,7 +52,7 @@
     </div>
     {% endif %}
     {% if username %}
-    {% if p.blog_author == username %}
+    {% if p.blog_author.name == username %}
       <div class="details-edit">
         <a href="/editing/{{id_blog}}">
       Edit

@@ -2,12 +2,16 @@ body {
 		max-width: 800px;
 		margin: 0 auto;
 		font-family: 'Lato', sans-serif;
+		background-image: url('img.jpg');
+		color: #EAF2F8;
 }
 /*
 styling header portion of base_login.html and base.html
 */
 header {
 	margin-bottom: 10px;
+	
+	color: #F3EFE8;
 }
 
 h1 {
@@ -17,11 +21,11 @@ h1 {
 .heading {
 	display: flex;
 	flex-wrap: wrap;
-	color: #000;
+	color: #F3EFE8;
 }
 
 .heading a {
-	color: #000;
+	color: #EAF2F8;
 }
 
 .heading-title {
@@ -50,20 +54,25 @@ h1 {
 }
 
 .links a {
-	color: #000;
+	color: #EAF2F8;
 }
 /* Styling related to post.html
 For post class - It hss four main parts
 post-main, post-detail, post-comments, post-pre-comments
 */
 .post {
+	
 	display: flex;
 	flex-wrap: wrap;
 	margin-bottom: 50px;
+	background-color: #5DADE2;
+	border: 5px solid;
+	border-radius: 15px;
+	border-color: #1B4F72;
 }
 
 .post a {
-	color: #000000;
+	color: #EAF2F8;
 }
 /* For post-main
 */
@@ -80,6 +89,7 @@ post-main, post-detail, post-comments, post-pre-comments
 
 .post-title a {
 	text-decoration: none;
+	color: #EAF2F8;
 }
 
 .post-date {
@@ -113,6 +123,11 @@ post-main, post-detail, post-comments, post-pre-comments
 
 .details-edit {
 	margin-top: 10px;
+}
+
+.details-edit a {
+	text-decoration: none;
+	color: #EAF2F8;
 }
 /* For post-comments
 */

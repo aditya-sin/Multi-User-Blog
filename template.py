@@ -8,7 +8,7 @@ import webapp2
 import jinja2
 import time
 
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
@@ -59,7 +59,7 @@ class BlogHandler(webapp2.RequestHandler):
 
     # logins a user by setting the cookie
     def login(self, user):
-        self.set_secure_cookie('user_id', str(user.key().id()))
+        self.set_secure_cookie('user_id', str(user.key.id()))
 
     # logouts a user by removing the value of cookie
     def logout(self):
@@ -97,12 +97,13 @@ def valid_pw(name, password, h):
     return h == make_pw_hash(name, password, salt)
 
 
-class User(db.Model):
+class User(ndb.Model):
     """ This class makes an entity User which stores the details of user on signup
     """
-    name = db.StringProperty(required=True)
-    pw_hash = db.StringProperty(required=True)
-    email = db.StringProperty()
+    name = ndb.StringProperty(required=True)
+    pw_hash = ndb.StringProperty(required=True)
+    email = ndb.StringProperty()
+    #userkey = ndb.KeyProperty(kind ='User', repeated = True)
 
     # Finds an entity of kind User using its id and returns it
     @classmethod
@@ -112,7 +113,7 @@ class User(db.Model):
     # Finds an entity of kind User using its name and returns it
     @classmethod
     def by_name(cls, name):
-        u = User.all().filter('name =', name).get()
+        u = User.query(User.name == name).get()
         return u
 
     # Creates an entity of kind User and returns it
@@ -131,15 +132,15 @@ class User(db.Model):
             return u
 
 
-class Blog(db.Model):
+class Blog(ndb.Model):
     """ This class creates an entity Blog which stores
     the details of blogs submitted by users.
     """
-    blog_author = db.StringProperty(required=True)
-    subject = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    last_modified = db.DateTimeProperty(auto_now=True)
+    blog_author = ndb.KeyProperty(kind='User')
+    subject = ndb.StringProperty(required=True)
+    content = ndb.TextProperty(required=True)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    last_modified = ndb.DateTimeProperty(auto_now=True)
 
     def render(self, **kw):
         # Allows correct rendering of new line in the blog
@@ -147,13 +148,13 @@ class Blog(db.Model):
         count_comment = 0
         count_like = 0
         count_dislike = 0
-        id_blog = self.key().id()
-        comments = db.GqlQuery(" SELECT * From Comment"
+        id_blog = self.key.id()
+        comments = ndb.gql(" SELECT * From Comment"
                                " WHERE comment_blog = :num"
                                " ORDER BY comment_time DESC", num=str(id_blog))
-        like = db.GqlQuery(" SELECT * FROM Like WHERE like_blog = :num2"
+        like = ndb.gql(" SELECT * FROM Like WHERE like_blog = :num2"
                            " AND like_dislike = 1", num2=str(id_blog))
-        dislike = db.GqlQuery(" SELECT * FROM Like WHERE like_blog = :num2"
+        dislike = ndb.gql(" SELECT * FROM Like WHERE like_blog = :num2"
                               " AND like_dislike = 0", num2=str(id_blog))
         # Counting number of comments, likes and dislikes for a blog
         for comment in comments:
@@ -174,12 +175,12 @@ class Blog(db.Model):
         return Blog.get_by_id(uid)
 
 
-class Comment(db.Model):
-    comment_blog = db.StringProperty(required=True)
-    user_name = db.StringProperty(required=True)
-    comment_content = db.StringProperty(required=True, multiline=True)
-    comment_time = db.DateTimeProperty(auto_now_add=True)
-    comment_id = db.StringProperty()
+class Comment(ndb.Model):
+    comment_blog = ndb.KeyProperty()
+    user_name = ndb.StringProperty(required=True)
+    comment_content = ndb.StringProperty(required=True)
+    comment_time = ndb.DateTimeProperty(auto_now_add=True)
+    comment_id = ndb.StringProperty()
 
     # Finds an entity of kind Comment using its id and returns it
     @classmethod
@@ -187,10 +188,10 @@ class Comment(db.Model):
         return Comment.get_by_id(uid)
 
 
-class Like(db.Model):
-    like_blog = db.StringProperty(required=True)
-    like_user = db.StringProperty(required=True)
-    like_dislike = db.IntegerProperty(required=True)
+class Like(ndb.Model):
+    like_blog = ndb.StringProperty(required=True)
+    like_user = ndb.StringProperty(required=True)
+    like_dislike = ndb.IntegerProperty(required=True)
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PASS_RE = re.compile(r"^.{3,20}$")
@@ -312,12 +313,12 @@ class Welcome(BlogHandler):
     def post(self):
         subject = self.request.get("subject")
         content = self.request.get("content")
-        blog_author = self.user.name
+        blog_author = self.user.key
 
         if subject and content:
-            b = Blog(blog_author=blog_author, subject=subject, content=content)
+            b = Blog(blog_author = blog_author, subject=subject, content=content)
             b.put()
-            id_post = str(b.key().id())
+            id_post = str(b.key.id())
 
             self.redirect("/%s" % id_post)
         else:
@@ -374,9 +375,13 @@ class Blogs(BlogHandler):
     """ Displays 10 most recent blogs to user whether user is login or not
     """
     def get(self):
-        blogs = db.GqlQuery(" SELECT * FROM Blog"
-                            " ORDER BY created DESC LIMIT 10")
+
+        blogs = Blog.query().order(-Blog.created)
+        #blogs = ndb.gql(" SELECT * FROM Blog"
+         #                   " ORDER BY created DESC LIMIT 10")
+        
         if self.user:
+            #self.response.write(blogs)
             self.render("front_login.html",  blogs=blogs, count=1,
                         username=self.user.name, display=0, c='')
         else:
@@ -394,7 +399,7 @@ class Blogs(BlogHandler):
             self.redirect('/')
         else:
             msg = 'Invalid login'
-            blogs = db.GqlQuery(" SELECT * FROM Blog"
+            blogs = ndb.gql(" SELECT * FROM Blog"
                                 " ORDER BY created DESC LIMIT 10")
             self.render('front_page.html', blogs=blogs,
                         error=msg, username='', display=0, c='')
@@ -406,17 +411,16 @@ class Posts(BlogHandler):
     """
     def get(self):
         if self.user:
-            b = self.user.name
-            blogs = db.GqlQuery(" SELECT * FROM Blog"
+            blogs = ndb.gql(" SELECT * FROM Blog"
                                 " WHERE blog_author = :num"
-                                " ORDER BY created DESC", num=b)
+                                " ORDER BY created DESC", num=self.user)
             count = 0
             for blog in blogs:
                 count += 1
             self.render("front_login.html", blogs=blogs, count=count,
                         username=self.user.name, display=0, c='')
         else:
-            blogs = db.GqlQuery(" SELECT * FROM Blog"
+            blogs = ndb.gql(" SELECT * FROM Blog"
                                 " ORDER BY created DESC LIMIT 10")
             self.render("front_page.html", blogs=blogs,
                         username='', display=0, c='')
@@ -458,25 +462,25 @@ class Edit(BlogHandler):
             # But user can dislike after liking the post and vice-versa.
             # User cannot like, dislike their own posts.
             if like or dislike:
-                likes = db.GqlQuery(" SELECT * FROM Like"
+                likes = ndb.gql(" SELECT * FROM Like"
                                     " WHERE like_blog = :num1"
                                     " AND like_user = :num2",
                                     num1=str(post_id),
                                     num2=self.user.name).get()
                 b = Blog.by_id(int(post_id))
-                if b.blog_author != self.user.name:
+                if b.blog_author != self.user:
                     if likes:
                         if likes.like_dislike == 1:
                             if like:
                                 post_id += '-1'
                                 self.redirect('/edit/%s' % post_id)
                             else:
-                                db.delete(likes)
+                                ndb.delete(likes)
                                 post_id += '-0'
                                 self.redirect('/edit/%s' % post_id)
                         else:
                             if like:
-                                db.delete(likes)
+                                ndb.delete(likes)
                                 post_id += '-0'
                                 self.redirect('/edit/%s' % post_id)
                             else:
@@ -500,10 +504,10 @@ class Edit(BlogHandler):
 
             # deletes the comment
             elif comment_del:
-                c = db.GqlQuery(" SELECT * FROM Comment"
+                c = ndb.gql(" SELECT * FROM Comment"
                                 " WHERE comment_id = :num",
                                 num=comment_del).get()
-                db.delete(c)
+                ndb.delete(c)
                 post_id += '-0'
                 self.redirect('/edit/%s' % post_id)
 
@@ -548,10 +552,9 @@ class Editing(BlogHandler):
     """
     def get(self, post_id):
         if self.user:
-            b = self.user.name
             post_id = post_id.split('-')[0]
             blogs = Blog.by_id(int(post_id))
-            if blogs.blog_author == b:
+            if blogs.blog_author == self.user:
                 self.render('newpost.html', username=self.user.name,
                             content=blogs.content, subject=blogs.subject)
             else:
@@ -572,13 +575,13 @@ class Editing(BlogHandler):
         # with it
         if delete:
             blogs = Blog.by_id(int(post_id))
-            comments = db.GqlQuery(" SELECT * FROM Comment"
+            comments = ndb.gql(" SELECT * FROM Comment"
                                    " WHERE comment_blog = :num", num=post_id)
-            likes = db.GqlQuery(" SELECT * FROM Like"
+            likes = ndb.gql(" SELECT * FROM Like"
                                 " WHERE like_blog = :num", num=post_id)
-            db.delete(blogs)
-            db.delete(comments)
-            db.delete(likes)
+            ndb.delete(blogs)
+            ndb.delete(comments)
+            ndb.delete(likes)
             time.sleep(1)
             self.redirect('/')
 
@@ -630,7 +633,7 @@ class Edit_Comment(BlogHandler):
 
         # deletes the comment
         if com_delete or not blogc:
-            db.delete(c)
+            ndb.delete(c)
             post_id += '-0'
             self.redirect('/edit/%s' % post_id)
 
