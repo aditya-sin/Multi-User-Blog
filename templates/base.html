@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="/static/blog.css" >
 	<link rel="stylesheet" media="screen and (max-width:500px)" href="/static/responsive.css">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
@@ -15,12 +16,12 @@
 		<h1 class="heading-title"><a href="/">Blogging is awesome!!!</a> </h1>
 		<div class="user-login">
 			<div class="button-box">
-			<form method="post">
+			<form method="post" action="{{server_url}}/">
 				<div>
-					<input class="front-login" type="text" name="username">
+					<input class="front-login" type="text" name="username" placeholder="username">
 				</div>
 				<div>
-					<input class="front-login" type="password" name="password">
+					<input class="front-login" type="password" name="password" placeholder="password">
 				</div>
 				<div class="error">{{ error }}</div>
 				<div><input type="submit" value="Login"></div>

@@ -21,38 +21,40 @@
   </div>
   
   <br>
+  
   <div class="post-details">
     <div class="details-author">
       <i class="fa fa-pencil"></i>
-      &nbsp By: &nbsp{{p.blog_author.name}}
+      &nbsp By: &nbsp{{p.blog_author.get().name}}
     </div>
+
     {% if display == 1 and not c %}
     <div class="like-dislike">
-    <div class="like-form">
-      <form method="post">
-        <input type="hidden" name="like" value="1">
-        {% if err == 1 %}
-        <div class="error">You can't like more than once!</div>
-        {% endif %}
-        <button type="submit"><i class="fa fa-thumbs-o-up"></i></button>
-      </form>
-    </div>
-    <div class="like-form">
-      <form method="post">
-        <input type="hidden" name="dislike" value="1">
-        {% if err == 2 %}
-        <div class="error">You can't dislike more than once!</div>
-        {% endif %}
-        <button type="submit" ><i class="fa fa-thumbs-o-down"></i></span></button>
-      </form>
-    </div>
+      <div class="like-form">
+        <form method="post" action="{{server_url}}/edit/{{id_blog}}">
+          <input type="hidden" name="like" value="1">
+          {% if err == 1 %}
+          <div class="error">You can't like more than once!</div>
+          {% endif %}
+          <button type="submit"><i class="fa fa-thumbs-o-up"></i></button>
+        </form>
+      </div>
+      <div class="like-form" >
+        <form method="post" action="{{server_url}}/edit/{{id_blog}}">
+          <input type="hidden" name="dislike" value="1">
+          {% if err == 2 %}
+          <div class="error">You can't dislike more than once!</div>
+          {% endif %}
+          <button type="submit" ><i class="fa fa-thumbs-o-down"></i></span></button>
+        </form>
+      </div>
       {% if err == 3 %}
         <div class="error">You can't like/dislike your own post!</div>
         {% endif %}
     </div>
     {% endif %}
     {% if username %}
-    {% if p.blog_author.name == username %}
+    {% if p.blog_author.get().name == username %}
       <div class="details-edit">
         <a href="/editing/{{id_blog}}">
       Edit
@@ -68,16 +70,17 @@
       </a>
       </div>
     {% endif %}
-    {% endif %}
+    {% endif %} 
   </div>
+  
   <div class="post-comments">
   <hr>
    {% if display == 1 %}
      {% if c %}
-       <form method="post">
+       <form method="post" action="{{server_url}}/edit-comment/{{c.comment_id}}">
         <div class="comments">
           <div class="comment-author">
-            <em>{{ c.user_name }}</em>
+            <em>{{ c.user_name.get().name }}</em>
           </div>
           <textarea class="comment-content" name="blog-comment">{{ c.comment_content| safe }}</textarea>
         </div>
@@ -87,14 +90,14 @@
       </form>
       <div class="res-del">
         <div class="reset">
-          <form method="post">
+          <form method="post" action="{{server_url}}/edit-comment/{{c.comment_id}}">
             <input type="hidden" name="comment-reset" value="1">
             <div>
               <input class="com-reset" type="submit" value="Reset">
             </div>
           </form>
         </div>
-        <div class="delete">
+        <div class="delete" action="{{server_url}}/edit-comment/{{c.comment_id}}">
           <form method="post">
             <input type="hidden" name="comment-delete" value="1">
             <div >
@@ -104,7 +107,7 @@
         </div>
       </div>
        {% else %}
-        <form method="post">
+        <form method="post" action="{{server_url}}/edit/{{id_blog}}">
           <div class="comments">
             <div class="comment-author">
               <em>{{ username }}</em>
@@ -126,16 +129,16 @@
      <div class="post-pre-comments"> 
       <div class="pre-comment">Comments</div>
       {% for comment in comments %}
-        {% if comment.comment_id != c.comment_id %}
+        {% if comment != c %}
           <div class="comments">
               <div class="comment-author">
-              <em>{{ comment.user_name }}</em>
+              <em>{{ comment.user_name.get().name }}</em>
               </div>
               <div class="comment-content">
               {{ comment.comment_content | safe}}
               </div>
           </div>
-          {% if comment.user_name == username %}
+          {% if comment.user_name.get().name == username %}
             <div class="comment-modify">
               <div class="comment-edit">
                 <form method="post">
@@ -143,15 +146,15 @@
                   <input class="edit-del" type="submit" value="Edit">
                 </form>
               </div>
-              <div class="comment-delete">
-                <form method="post">
+              <div class="comment-delete" >
+                <form method="post" action="{{server_url}}/edit-comment/{{comment.comment_id}}">
                   <input type="hidden" name="delete-comment" value="{{ comment.comment_id }}">
                   <input class="edit-del" type="submit" value="Delete">
                 </form>
               </div>
             </div>
           {% endif %}
-          {% if username and comment.user_name != username %}
+          {% if username and comment.user_name.get().name != username %}
             <div class="no-edit">
               
               {% if err == 5 %}
@@ -166,6 +169,7 @@
         {% endif %}
       {% endfor %}
     {% endif %}
-  {% endif %}
-  </div>
+  {% endif %} 
+  
+  </div> 
   </div>
