@@ -4,11 +4,15 @@
 {% if not count %}
    <div class="no-posts">You have no posts to show!!!!</div>
    {% endif %}
+<div class="container">
 	
 {% for blog in blogs %}
 	
 	{{ blog.render(display = display, username = username ,c = c)| safe }}
 {% endfor %}		
+
+	
+</div>
 
 
 

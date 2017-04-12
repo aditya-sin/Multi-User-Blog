@@ -2,16 +2,16 @@ body {
 		max-width: 800px;
 		margin: 0 auto;
 		font-family: 'Lato', sans-serif;
-		background-image: url('img.jpg');
+		background-color: #b7b795;
 		color: #EAF2F8;
 }
 /*
 styling header portion of base_login.html and base.html
 */
 header {
-	margin-bottom: 10px;
-	
+	padding-bottom: 10px;
 	color: #F3EFE8;
+	background-color: #797953;
 }
 
 h1 {
@@ -57,17 +57,22 @@ h1 {
 	color: #EAF2F8;
 }
 /* Styling related to post.html
-For post class - It hss four main parts
+For post class - It has four main parts
 post-main, post-detail, post-comments, post-pre-comments
 */
+
+.container {
+
+	background-color: #797953;
+	height: calc(100vh - 111px);
+}
+
 .post {
 	
 	display: flex;
 	flex-wrap: wrap;
-	background-color: #5DADE2;
-	border: 5px solid;
-	border-radius: 15px;
-	border-color: #1B4F72;
+	background-color: #797953;
+	
 }
 
 .post a {
@@ -249,11 +254,17 @@ post-main, post-detail, post-comments, post-pre-comments
 
 .edit-blog {
 	width: 600px;
+	margin: 0 auto;
 	margin-bottom: 50px;
+	padding-top: 25px;
 }
 
 .subject-title {
 	text-align: center;
+}
+
+.subject-title {
+	margin-top: 0;
 }
 
 .subject-body {
@@ -261,9 +272,11 @@ post-main, post-detail, post-comments, post-pre-comments
 	margin : 0 auto;
 	text-align: center;
 	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .subject-content {
+	height: 1.5em;
 	width: calc(100% - 20px);
 	border-radius: 2px;
 }
@@ -336,8 +349,14 @@ post-main, post-detail, post-comments, post-pre-comments
 
 hr {
 	margin: 0;
+	margin-left: 10px;
 }
 
 h2 {
-	margin-bottom: 0px;
+	margin: 0;
+	padding-bottom: 10px;
+}
+
+h3 {
+	margin-bottom: 0;
 }

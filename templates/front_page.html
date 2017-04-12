@@ -2,11 +2,15 @@
 
 {% block content %}
 
+<div class="container">
 	
-{% for blog in blogs %}
+	{% for blog in blogs %}
 	
 	{{ blog.render(display = display, username = username ,c = c)| safe }}
-{% endfor %}		
+	{% endfor %}
+	
+</div>
+		
 
 
 

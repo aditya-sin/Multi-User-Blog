@@ -1,17 +1,19 @@
 {% extends "base_login.html" %}
 
 {% block content %}
+<div class="container">
+	
 
 <div class="edit-blog">
 	<form class="posts" method="post">
 		<div>
-				<h2 class="subject-title" >Subject of the Blog</h2>
+				<h3 class="subject-title" >Subject of the Blog</h2>
 				<div class="subject-body">
 					<input  class="subject-content" type="text" name="subject" value="{{ subject}}">
 				</div>
 		</div>
 		<div >
-				<h2 class="subject-title" >Content of the blog</h2>
+				<h3 class="subject-title" >Content of the blog</h2>
 				<div class="subject-body">
 					<textarea class="content" name="content">{{ content }}</textarea>
 				</div>
@@ -55,7 +57,7 @@
 
 </div>
 	
-		
+</div>
 
 
 
